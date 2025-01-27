@@ -13,6 +13,7 @@ export interface Repository<T> {
 export interface PetRepository extends Repository<Pet> {
   findByShelterId(shelterId: string): Promise<Pet[]>;
   findByStatus(status: string): Promise<Pet[]>;
+  findBySpecies(species: string): Promise<Pet[]>;
 }
 
 export interface ShelterRepository extends Repository<Shelter> {

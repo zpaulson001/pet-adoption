@@ -78,6 +78,13 @@ paths:
       tags:
         - Pets
       summary: Get all pets
+      parameters:
+        - in: query
+          name: species
+          required: false
+          schema:
+            type: string
+          description: Filter pets by species
       responses:
         '200':
           description: List of all pets

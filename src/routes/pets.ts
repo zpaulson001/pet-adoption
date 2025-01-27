@@ -10,6 +10,13 @@ const router = express.Router();
  *     tags:
  *       - Pets
  *     summary: Get all pets
+ *     parameters:
+ *       - in: query
+ *         name: species
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Filter pets by species
  *     responses:
  *       200:
  *         description: List of all pets
@@ -23,7 +30,12 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const petRepository = RepositoryFactory.getPetRepository();
-    const pets = await petRepository.findAll();
+    const species = req.query.species as string | undefined;
+
+    const pets = species
+      ? await petRepository.findBySpecies(species)
+      : await petRepository.findAll();
+
     res.json(pets);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch pets' });

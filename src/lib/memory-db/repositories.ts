@@ -23,6 +23,13 @@ export class MemoryPetRepository
     const pets = this.getData();
     return pets.filter((pet) => pet.status === status);
   }
+
+  async findBySpecies(species: string): Promise<Pet[]> {
+    const allPets = await this.findAll();
+    return allPets.filter(
+      (pet) => pet.species.toLowerCase() === species.toLowerCase()
+    );
+  }
 }
 
 export class MemoryShelterRepository
