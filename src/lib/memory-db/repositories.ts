@@ -3,6 +3,7 @@ import {
   PetRepository,
   ShelterRepository,
   UserRepository,
+  PetFilter,
 } from '../../types/repositories.js';
 import { MemoryRepository } from './base-repository.js';
 
@@ -14,21 +15,23 @@ export class MemoryPetRepository
     super('pets');
   }
 
-  async findByShelterId(shelterId: string): Promise<Pet[]> {
-    const pets = this.getData();
-    return pets.filter((pet) => pet.shelterId === shelterId);
-  }
+  async findByFilter(filter: PetFilter): Promise<Pet[]> {
+    const pets = await this.findAll();
 
-  async findByStatus(status: string): Promise<Pet[]> {
-    const pets = this.getData();
-    return pets.filter((pet) => pet.status === status);
-  }
+    return pets.filter((pet) => {
+      const matchesSpecies =
+        !filter.species ||
+        pet.species.toLowerCase() === filter.species.toLowerCase();
 
-  async findBySpecies(species: string): Promise<Pet[]> {
-    const allPets = await this.findAll();
-    return allPets.filter(
-      (pet) => pet.species.toLowerCase() === species.toLowerCase()
-    );
+      const matchesStatus =
+        !filter.status ||
+        pet.status.toLowerCase() === filter.status.toLowerCase();
+
+      const matchesShelterId =
+        !filter.shelterId || pet.shelterId === filter.shelterId;
+
+      return matchesSpecies && matchesStatus && matchesShelterId;
+    });
   }
 }
 

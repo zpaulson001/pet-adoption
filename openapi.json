@@ -131,6 +131,29 @@
               "type": "string"
             },
             "description": "Filter pets by species"
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "available",
+                "adopted",
+                "pending"
+              ]
+            },
+            "description": "Filter pets by status"
+          },
+          {
+            "in": "query",
+            "name": "shelterId",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter pets by shelter ID"
           }
         ],
         "responses": {

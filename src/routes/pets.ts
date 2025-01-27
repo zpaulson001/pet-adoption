@@ -1,5 +1,6 @@
 import express from 'express';
 import { RepositoryFactory } from '../lib/repository-factory.js';
+import { type PetFilter } from '../types/repositories.js';
 
 const router = express.Router();
 
@@ -17,6 +18,19 @@ const router = express.Router();
  *         schema:
  *           type: string
  *         description: Filter pets by species
+ *       - in: query
+ *         name: status
+ *         required: false
+ *         schema:
+ *           type: string
+ *           enum: [available, adopted, pending]
+ *         description: Filter pets by status
+ *       - in: query
+ *         name: shelterId
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Filter pets by shelter ID
  *     responses:
  *       200:
  *         description: List of all pets
@@ -30,12 +44,14 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const petRepository = RepositoryFactory.getPetRepository();
-    const species = req.query.species as string | undefined;
 
-    const pets = species
-      ? await petRepository.findBySpecies(species)
-      : await petRepository.findAll();
+    const filter: PetFilter = {
+      species: req.query.species as string | undefined,
+      status: req.query.status as string | undefined,
+      shelterId: req.query.shelterId as string | undefined,
+    };
 
+    const pets = await petRepository.findByFilter(filter);
     res.json(pets);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch pets' });

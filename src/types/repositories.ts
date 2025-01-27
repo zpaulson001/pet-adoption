@@ -10,10 +10,19 @@ export interface Repository<T> {
   delete(id: string): Promise<boolean>;
 }
 
-export interface PetRepository extends Repository<Pet> {
-  findByShelterId(shelterId: string): Promise<Pet[]>;
-  findByStatus(status: string): Promise<Pet[]>;
-  findBySpecies(species: string): Promise<Pet[]>;
+export interface PetFilter {
+  species?: string;
+  status?: string;
+  shelterId?: string;
+}
+
+export interface PetRepository {
+  findAll(): Promise<Pet[]>;
+  findById(id: string): Promise<Pet | null>;
+  findByFilter(filter: PetFilter): Promise<Pet[]>;
+  create(pet: Pet): Promise<Pet>;
+  update(id: string, pet: Pet): Promise<Pet | null>;
+  delete(id: string): Promise<boolean>;
 }
 
 export interface ShelterRepository extends Repository<Shelter> {
